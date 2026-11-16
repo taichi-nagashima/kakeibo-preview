@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#F6F5F0" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="共通支出家計簿" />
+    <link rel="manifest" href="data:application/json;base64,eyJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBkMTEwZSIsImRlc2NyaXB0aW9uIjoi44OR44O844OI44OK44O844GoMuS6uuOBp+WFseacieOBmeOCi+WFsemAmuaUr+WHuuWwgueUqOOBruWutuioiOewvyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiaWNvbnMiOlt7InB1cnBvc2UiOiJhbnkiLCJzaXplcyI6IjUxMng1MTIiLCJzcmMiOiIuLi9pY29uLndlYnAiLCJ0eXBlIjoiaW1hZ2Uvd2VicCJ9XSwibGFuZyI6ImphIiwibmFtZSI6IuWFsemAmuaUr+WHuuWutuioiOewvyIsIm9yaWVudGF0aW9uIjoicG9ydHJhaXQiLCJzY29wZSI6Ii4uLyIsInNob3J0X25hbWUiOiLlhbHpgJrlrrboqIjnsL8iLCJzdGFydF91cmwiOiIuLi9pbmRleC5odG1sIiwidGhlbWVfY29sb3IiOiIjMGU3YTVmIn0=" />
+    <link rel="icon" href="data:," />
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+    <title>共通支出家計簿</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=preview1">
+  </head>
+  <body>
+    <div id="app">
+      <!-- 起動中 -->
+      <section id="screen-loading" class="spinner-wrap">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>読み込み中…</p>
+      </section>
+
+      <!-- Supabase接続設定（初回のみ：Publishable Keyの入力） -->
+      <section id="screen-setup" class="gate hidden">
+        <div>
+          <h1>接続設定</h1>
+          <p class="lead">Supabaseプロジェクトの接続情報です。通常はそのまま「保存してはじめる」を押せば使えます。入力した情報はこの端末に保存され、次回から自動で接続します。</p>
+        </div>
+        <div class="field">
+          <label for="cfg-url">Supabase URL</label>
+          <input id="cfg-url" type="url" inputmode="url" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="cfg-key">Publishable Key（anon key）</label>
+          <input id="cfg-key" type="text" autocomplete="off" placeholder="sb_publishable_…" />
+        </div>
+        <div id="setup-error" class="form-error hidden"></div>
+        <button id="btn-save-config" class="btn btn-primary btn-block">保存してはじめる</button>
+      </section>
+
+      <!-- ログイン -->
+      <section id="screen-login" class="gate hidden">
+        <div>
+          <h1>ログイン</h1>
+          <p class="lead">共通支出家計簿にログインします。一度ログインすると、次回からは自動で開きます。</p>
+        </div>
+        <div class="field">
+          <label for="login-email">メールアドレス</label>
+          <input id="login-email" type="email" autocomplete="email" inputmode="email" />
+        </div>
+        <div class="field">
+          <label for="login-password">パスワード</label>
+          <input id="login-password" type="password" autocomplete="current-password" />
+        </div>
+        <div id="login-error" class="form-error hidden"></div>
+        <button id="btn-login" class="btn btn-primary btn-block">ログイン</button>
+        <button id="btn-to-setup" class="btn btn-ghost btn-block">接続設定を変更する</button>
+      </section>
+
+      <!-- 家計簿の作成 / 参加（household_id 未設定のときだけ） -->
+      <section id="screen-join" class="gate hidden">
+        <div>
+          <h1>家計簿のセットアップ</h1>
+          <p class="lead">このアカウントはまだ家計簿に紐付いていません。新しく作るか、既存の家計簿に参加してください。表示名は自由に決められ、あとから設定で変更できます。</p>
+        </div>
+        <div class="field">
+          <label for="join-display-name">表示名（自由に決められます）</label>
+          <input id="join-display-name" type="text" autocomplete="name" placeholder="例：ゆうた、さくら など好きな名前" />
+        </div>
+        <div class="field">
+          <label for="new-household-name">新しい家計簿の名前</label>
+          <input id="new-household-name" type="text" placeholder="例：ふたりの家計簿" />
+        </div>
+        <button id="btn-create-household" class="btn btn-primary btn-block">新しい家計簿を作成する</button>
+        <div class="divider">または</div>
+        <div class="field">
+          <label for="join-household-id">参加する家計簿のID（household_id）</label>
+          <input id="join-household-id" type="text" autocomplete="off" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+        </div>
+        <button id="btn-join-household" class="btn btn-ghost btn-block">この家計簿に参加する</button>
+        <div id="join-error" class="form-error hidden"></div>
+        <button id="btn-logout-join" class="btn btn-ghost btn-block">ログアウト</button>
+      </section>
+
+      <!-- メイン -->
+      <section id="screen-main" class="hidden">
+        <!-- タブ1：入力 -->
+        <div id="tab-input" class="tab-panel active">
+          <div class="scroll-area" style="padding-bottom:6px;">
+            <div class="kind-toggle" id="kind-toggle" role="group" aria-label="記録の種別">
+              <button type="button" data-kind="expense" class="on">使う</button>
+              <button type="button" data-kind="saving">貯める</button>
+              <button type="button" data-kind="income">入る</button>
+            </div>
+            <div class="summary-card">
+              <div class="cell">
+                <div class="cap">今月の予算残り（全体）</div>
+                <div class="val tnum" id="sum-total-remain">—</div>
+                <div class="sub tnum" id="sum-total-sub"></div>
+              </div>
+              <div class="cell">
+                <div class="cap" id="sum-cat-cap">カテゴリ予算残り</div>
+                <div class="val tnum" id="sum-cat-remain">—</div>
+                <div class="sub tnum" id="sum-cat-sub"></div>
+              </div>
+            </div>
+
+            <p class="ctl-label">支払った人</p>
+            <div class="payer-toggle" id="payer-toggle"></div>
+
+            <p class="ctl-label">カテゴリ</p>
+            <div class="chips" id="category-chips"></div>
+
+            <div class="date-memo">
+              <input type="date" id="input-date" aria-label="日付" />
+              <input type="text" id="input-memo" placeholder="店名・メモ（任意）" autocomplete="off" />
+            </div>
+
+            <div class="advance-row hidden" id="advance-row">
+              <div class="grow">
+                <div class="advance-title">立て替え</div>
+                <div class="advance-sub">立て替えた支払いは、支出の合計や予算などの集計から除外されます</div>
+              </div>
+              <label class="switch" aria-label="立て替えとして登録"><input type="checkbox" id="input-advance" /><span class="tr"></span></label>
+            </div>
+          </div>
+
+          <div class="amount-display" id="amount-display">
+            <div class="expr tnum" id="amount-expr"></div>
+            <div class="amt tnum"><small>¥</small><span id="amount-value">0</span></div>
+          </div>
+          <div class="keypad" role="group" aria-label="金額入力キーパッド">
+            <button class="key" data-key="7">7</button>
+            <button class="key" data-key="8">8</button>
+            <button class="key" data-key="9">9</button>
+            <button class="key plus" data-key="+">+</button>
+            <button class="key" data-key="4">4</button>
+            <button class="key" data-key="5">5</button>
+            <button class="key" data-key="6">6</button>
+            <button class="key submit" id="key-submit" disabled>登録する</button>
+            <button class="key" data-key="1">1</button>
+            <button class="key" data-key="2">2</button>
+            <button class="key" data-key="3">3</button>
+            <button class="key" data-key="0">0</button>
+            <button class="key" data-key="00">00</button>
+            <button class="key fn" data-key="C">C</button>
+          </div>
+        </div>
+
+        <!-- タブ2：履歴・集計 -->
+        <div id="tab-history" class="tab-panel">
+          <div class="scroll-area">
+            <div class="month-nav">
+              <button id="month-prev" aria-label="前の月">‹</button>
+              <div class="m" id="month-label">—</div>
+              <button id="month-next" aria-label="次の月">›</button>
+            </div>
+            <div id="history-body"></div>
+          </div>
+        </div>
+
+        <!-- タブ3：設定 -->
+        <div id="tab-settings" class="tab-panel">
+          <div class="scroll-area">
+            <div class="set-sec">
+              <h2>家計簿</h2>
+              <p class="hint">参加している家計簿を切り替えられます。自分の分の家計簿を新しく作ることも、IDを入力して他の家計簿に参加することもできます。表示名は家計簿ごとに別々に設定できます。使用中の家計簿は「名前を変更」から名前を変えられます（他の家計簿の名前を変えたい場合は、先にその家計簿へ切り替えてください）。</p>
+              <div class="set-card" id="household-switch-list" style="padding-top:6px;padding-bottom:6px;"></div>
+              <div class="row-gap" style="margin-top:10px;">
+                <button id="btn-open-create-household" class="btn btn-ghost">＋ 新しく作成</button>
+                <button id="btn-open-join-household" class="btn btn-ghost">IDで参加</button>
+              </div>
+            </div>
+
+            <div class="set-sec">
+              <h2>予算設定</h2>
+              <p class="hint">カテゴリごとの予算だけを設定します。全体予算は「支出」カテゴリの予算合計で自動的に決まるので、全体予算を別に入力する必要はありません。「貯蓄・投資」カテゴリの金額は目標額として別に管理し、全体予算には含めません。「収入」カテゴリには予算はありません。</p>
+              <div class="set-card">
+                <div class="set-row">
+                  <div class="grow"><b>全体予算（月間）</b><div style="font-size:12px;color:var(--faint);margin-top:2px;">支出カテゴリの予算合計（自動計算）</div></div>
+                  <div class="tnum" id="set-total-display" style="font-size:22px;font-weight:800;white-space:nowrap;">¥0</div>
+                </div>
+                <div id="set-cat-budgets"></div>
+                <div style="margin-top:12px;">
+                  <button id="btn-save-budgets" class="btn btn-primary btn-block">予算を保存する</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="set-sec">
+              <h2>貯蓄目標</h2>
+              <p class="hint">貯蓄・投資の目標額と、記録を始めた時点の資産額を設定します。履歴・集計タブに「貯蓄・投資の進捗」カードが表示され、目標までの残りと到達ペースが見られます。目標額が未設定（空欄）の場合は進捗カードは表示されません。</p>
+              <div class="set-card">
+                <div class="set-row">
+                  <div class="grow"><b>目標額</b><div style="font-size:12px;color:var(--faint);margin-top:2px;">貯蓄・投資の到達目標</div></div>
+                  <div class="yen-input"><span>¥</span><input type="number" min="0" inputmode="numeric" id="set-savings-goal" placeholder="未設定" /></div>
+                </div>
+                <div class="set-row">
+                  <div class="grow"><b>開始時の資産額</b><div style="font-size:12px;color:var(--faint);margin-top:2px;">アプリで記録を始める前に持っていた貯蓄・投資の額</div></div>
+                  <div class="yen-input"><span>¥</span><input type="number" min="0" inputmode="numeric" id="set-savings-start" placeholder="0" /></div>
+                </div>
+                <div style="margin-top:12px;">
+                  <button id="btn-save-savings-goal" class="btn btn-primary btn-block">貯蓄目標を保存する</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="set-sec">
+              <h2>カテゴリ管理</h2>
+              <p class="hint">名称・テーマカラー・表示順の変更と、カテゴリの追加ができます。</p>
+              <div class="set-card" id="cat-manage-list"></div>
+              <div class="set-card" style="margin-top:10px;">
+                <div class="stack">
+                  <div class="field">
+                    <label for="new-cat-name">新しいカテゴリ名</label>
+                    <input id="new-cat-name" type="text" placeholder="例：外食" />
+                  </div>
+                  <div class="field">
+                    <label for="new-cat-kind">種別</label>
+                    <select id="new-cat-kind">
+                      <option value="expense" selected>支出</option>
+                      <option value="saving">貯蓄・投資</option>
+                      <option value="income">収入</option>
+                    </select>
+                  </div>
+                  <div class="row-gap">
+                    <div class="field">
+                      <label for="new-cat-color">テーマカラー</label>
+                      <input id="new-cat-color" type="color" value="#e07856" style="width:100%;" />
+                    </div>
+                    <div class="field" id="new-cat-budget-field">
+                      <label for="new-cat-budget" id="new-cat-budget-label">月間予算（円）</label>
+                      <input id="new-cat-budget" type="number" inputmode="numeric" min="0" placeholder="0" />
+                    </div>
+                  </div>
+                  <button id="btn-add-category" class="btn btn-ghost btn-block">カテゴリを追加</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="set-sec">
+              <h2>固定費の自動登録</h2>
+              <p class="hint">毎月決まった支出を、計上日を過ぎたら自動で履歴に登録します（当月分のみ・重複登録はしません）。</p>
+              <div class="set-card" id="rec-list" style="padding-top:6px;padding-bottom:6px;"></div>
+              <button id="btn-add-recurring" class="btn btn-ghost btn-block" style="margin-top:10px;">＋ 固定費を追加</button>
+            </div>
+
+            <div class="set-sec">
+              <h2>メンバーの名前</h2>
+              <p class="hint">表示名は各メンバーが自由に決められます。「支払った人」の選択や履歴・集計には、ここで設定した名前がそのまま表示されます。自分の名前はいつでも変更できます。名前は家計簿ごとに別々で、ここで変えるのは選択中の家計簿での名前だけです。</p>
+              <div class="set-card" id="member-name-list"></div>
+            </div>
+
+            <div class="set-sec">
+              <h2>家計簿の情報</h2>
+              <div class="set-card stack">
+                <div>
+                  <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px;">家計簿ID（メンバー参加用）</div>
+                  <div class="id-box tnum" id="household-id-box">—</div>
+                </div>
+                <div>
+                  <div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:4px;">メンバー</div>
+                  <div id="member-list" style="font-size:14px;"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="set-sec">
+              <button id="btn-logout" class="btn btn-ghost btn-block">ログアウト</button>
+              <button id="btn-reset-config" class="btn btn-ghost btn-block" style="margin-top:10px;">接続設定を変更する</button>
+            </div>
+          </div>
+        </div>
+
+        <nav class="tabbar" aria-label="メインタブ">
+          <button id="tabbtn-input" class="active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            入力
+          </button>
+          <button id="tabbtn-history">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15v3M12 10v8M17 6v12"/></svg>
+            履歴・集計
+          </button>
+          <button id="tabbtn-settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            設定
+          </button>
+        </nav>
+      </section>
+    </div>
+
+    <!-- ボトムシート -->
+    <div id="sheet-backdrop">
+      <div id="sheet" role="dialog" aria-modal="true">
+        <div class="grab"></div>
+        <div id="sheet-content"></div>
+      </div>
+    </div>
+
+    <div id="toast" role="status"></div>
+
+    <script src="core.js?v=preview1"></script>
+    <script src="data.js?v=preview1"></script>
+    <script src="input.js?v=preview1"></script>
+
+    <script src="history.js?v=preview1"></script>
+    <script src="settings.js?v=preview1"></script>
+    <script src="sheet.js?v=preview1"></script>
+    <script src="app.js?v=preview1"></script>
+  </body>
+</html>
