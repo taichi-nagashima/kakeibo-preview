@@ -16,10 +16,11 @@
 <link rel="manifest" href="manifest.json">
     <title>共通支出家計簿</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>(function(){try{var t=localStorage.getItem('kyotsu_kakeibo_theme');if(t){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,500;9..40,600;9..40,700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=preview3">
+    <link rel="stylesheet" href="style.css?v=preview4">
   </head>
   <body>
     <div id="app">
@@ -172,6 +173,21 @@
         <div id="tab-settings" class="tab-panel">
           <div class="scroll-area">
             <div class="set-sec">
+              <h2>テーマカラー</h2>
+              <p class="hint">アプリのテーマカラーを選べます。選択はこの端末に保存されるので、使う人ごとに好きな色にできます。</p>
+              <div class="set-card">
+                <div class="theme-swatches" id="theme-swatches">
+                  <button type="button" class="theme-swatch" data-theme-choice="green" style="--sw:#0B7A5C"><span></span>グリーン</button>
+                  <button type="button" class="theme-swatch" data-theme-choice="coral" style="--sw:#FF5A43"><span></span>コーラル</button>
+                  <button type="button" class="theme-swatch" data-theme-choice="blue" style="--sw:#2563EB"><span></span>ブルー</button>
+                  <button type="button" class="theme-swatch" data-theme-choice="terracotta" style="--sw:#D96B43"><span></span>テラコッタ</button>
+                  <button type="button" class="theme-swatch" data-theme-choice="purple" style="--sw:#7C5CFF"><span></span>パープル</button>
+                  <button type="button" class="theme-swatch" data-theme-choice="pink" style="--sw:#EC4899"><span></span>ピンク</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="set-sec">
               <h2>家計簿</h2>
               <p class="hint">参加している家計簿を切り替えられます。自分の分の家計簿を新しく作ることも、IDを入力して他の家計簿に参加することもできます。表示名は家計簿ごとに別々に設定できます。使用中の家計簿は「名前を変更」から名前を変えられます（他の家計簿の名前を変えたい場合は、先にその家計簿へ切り替えてください）。</p>
               <div class="set-card" id="household-switch-list" style="padding-top:6px;padding-bottom:6px;"></div>
@@ -308,13 +324,13 @@
 
     <div id="toast" role="status"></div>
 
-    <script src="core.js?v=preview3"></script>
-    <script src="data.js?v=preview3"></script>
-    <script src="input.js?v=preview3"></script>
+    <script src="core.js?v=preview4"></script>
+    <script src="data.js?v=preview4"></script>
+    <script src="input.js?v=preview4"></script>
 
-    <script src="history.js?v=preview3"></script>
-    <script src="settings.js?v=preview3"></script>
-    <script src="sheet.js?v=preview3"></script>
-    <script src="app.js?v=preview3"></script>
+    <script src="history.js?v=preview4"></script>
+    <script src="settings.js?v=preview4"></script>
+    <script src="sheet.js?v=preview4"></script>
+    <script src="app.js?v=preview4"></script>
   </body>
 </html>

@@ -866,3 +866,23 @@ th, td, label, .badge, .tab-btn { word-break: keep-all; overflow-wrap: anywhere;
 @media (prefers-color-scheme: dark) {
   .flow-item .val.income, .tx .amt3.income { color: #2DD4BF; }
 }
+
+/* ---- テーマカラー選択 ---- */
+.theme-swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.theme-swatch { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-size: 13px; font-weight: 600; color: var(--muted); min-height: 48px; }
+.theme-swatch span { width: 22px; height: 22px; border-radius: 50%; background: var(--sw); flex: none; }
+.theme-swatch.on { border-color: var(--sw); color: var(--ink); box-shadow: 0 0 0 1px var(--sw); }
+:root[data-theme="green"] { --accent: #0B7A5C; --accent-strong: #075E46; --accent-soft: rgba(11, 122, 92, 0.10); }
+:root[data-theme="coral"] { --accent: #FF5A43; --accent-strong: #E8492F; --accent-soft: #FFF0ED; }
+:root[data-theme="blue"] { --accent: #2563EB; --accent-strong: #1D4ED8; --accent-soft: rgba(37, 99, 235, 0.10); }
+:root[data-theme="terracotta"] { --accent: #D96B43; --accent-strong: #BC5327; --accent-soft: rgba(217, 107, 67, 0.10); }
+:root[data-theme="purple"] { --accent: #7C5CFF; --accent-strong: #6347E0; --accent-soft: rgba(124, 92, 255, 0.10); }
+:root[data-theme="pink"] { --accent: #EC4899; --accent-strong: #DB2777; --accent-soft: rgba(236, 72, 153, 0.10); }
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="green"] { --accent: #2DD4A0; --accent-strong: #10B981; --accent-soft: rgba(45, 212, 160, 0.14); }
+  :root[data-theme="coral"] { --accent: #FF6B57; --accent-strong: #FF8A75; --accent-soft: rgba(255, 107, 87, 0.16); }
+  :root[data-theme="blue"] { --accent: #60A5FA; --accent-strong: #93C5FD; --accent-soft: rgba(96, 165, 250, 0.16); }
+  :root[data-theme="terracotta"] { --accent: #E87A52; --accent-strong: #F09A78; --accent-soft: rgba(232, 122, 82, 0.16); }
+  :root[data-theme="purple"] { --accent: #A78BFA; --accent-strong: #C4B5FD; --accent-soft: rgba(167, 139, 250, 0.16); }
+  :root[data-theme="pink"] { --accent: #F472B6; --accent-strong: #F9A8D4; --accent-soft: rgba(244, 114, 182, 0.16); }
+}

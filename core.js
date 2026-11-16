@@ -135,8 +135,27 @@ function createClient(cfg) {
   });
 }
 
+/* ---------- テーマカラー ---------- */
+var THEME_KEY = 'kyotsu_kakeibo_theme';
+var THEME_BAR = { green: '#0B7A5C', coral: '#FF5A43', blue: '#2563EB', terracotta: '#D96B43', purple: '#7C5CFF', pink: '#EC4899' };
+function applyTheme(name, save) {
+  if (!name || !THEME_BAR[name]) name = 'coral';
+  document.documentElement.setAttribute('data-theme', name);
+  if (save) { try { localStorage.setItem(THEME_KEY, name); } catch (e) {} }
+  var sw = document.querySelectorAll('.theme-swatch');
+  for (var i = 0; i < sw.length; i++) sw[i].classList.toggle('on', sw[i].getAttribute('data-theme-choice') === name);
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', THEME_BAR[name]);
+}
+function initTheme() {
+  var t = 'coral';
+  try { t = localStorage.getItem(THEME_KEY) || 'coral'; } catch (e) {}
+  applyTheme(t, false);
+}
+
 /* ---------- 起動フロー ---------- */
 function boot() {
+  initTheme();
   showScreen('screen-loading');
   if (!window.supabase) {
     // ライブラリ読み込み失敗時（オフライン等）は設定画面で案内する

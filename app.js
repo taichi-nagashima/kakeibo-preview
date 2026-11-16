@@ -292,6 +292,11 @@ function openJoinHouseholdSheet() {
    イベント結線
    ============================================================ */
 function bindEvents() {
+  // テーマカラー選択
+  document.querySelectorAll('.theme-swatch').forEach(function (b) {
+    b.addEventListener('click', function () { applyTheme(b.getAttribute('data-theme-choice'), true); });
+  });
+
   // 接続設定
   $('btn-save-config').addEventListener('click', function () {
     var url = $('cfg-url').value.trim().replace(/\/+$/, '');
