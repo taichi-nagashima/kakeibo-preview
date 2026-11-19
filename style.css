@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   --bg: #F4F5F7;
   --surface: #FFFFFF;
   --surface-2: #EEF1F4;
@@ -22,7 +22,7 @@
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */
   :root {
     --bg: #070E14;
     --surface: #0F1C26;
@@ -138,7 +138,7 @@ input, select, textarea { font: inherit; color: var(--ink); font-size: 16px; }
   border-radius: 999px;
   box-shadow: 0 14px 30px -8px rgba(9, 23, 35, 0.45);
 }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */
   .tabbar {
     background: #162938;
   }
@@ -217,7 +217,7 @@ input, select, textarea { font: inherit; color: var(--ink); font-size: 16px; }
 .summary-card .cell .val.neg { color: #FF9D8A; }
 .summary-card .cell .val.neg small { color: rgba(255, 157, 138, 0.85); }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */
   .summary-card {
     background: #162938;
     color: var(--ink);
@@ -299,7 +299,7 @@ input, select, textarea { font: inherit; color: var(--ink); font-size: 16px; }
 .payer-toggle button.on:nth-child(2) {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), inset 0 -2.5px 0 #091723;
 }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */
   .payer-toggle button.on:nth-child(2) {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), inset 0 -2.5px 0 #6E97B8;
   }
@@ -332,7 +332,7 @@ input, select, textarea { font: inherit; color: var(--ink); font-size: 16px; }
   color: var(--accent-strong);
   font-weight: 700;
 }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */
   .chip.on {
     color: #FF8A75;
   }
@@ -380,7 +380,7 @@ input, select, textarea { font: inherit; color: var(--ink); font-size: 16px; }
   box-shadow: 0 0 0 1px rgba(9, 23, 35, 0.08), 0 2px 4px -2px rgba(9, 23, 35, 0.05);
   transition: transform 80ms ease-out, box-shadow 80ms ease-out, background 80ms ease-out;
 }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */
   .key {
     border-top-color: rgba(255, 255, 255, 0.14);
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.10);
@@ -408,7 +408,7 @@ input, select, textarea { font: inherit; color: var(--ink); font-size: 16px; }
   transform: translateY(2px) scale(0.97);
   box-shadow: 0 2px 6px rgba(9, 23, 35, 0.25);
 }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */
   .key.submit {
     border-top-color: transparent;
     box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.45);
@@ -549,7 +549,7 @@ input, select, textarea { font: inherit; color: var(--ink); font-size: 16px; }
 /* ---------- 編集シートのトグル行 ---------- */
 .sheet-toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .sheet-toggle-label { font-size: 13px; font-weight: 600; color: var(--muted); }
-@media (prefers-color-scheme: dark) { .badge.card { background: rgba(255, 107, 87, 0.18); color: #FF9D8A; } }
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */ .badge.card { background: rgba(255, 107, 87, 0.18); color: #FF9D8A; } }
 .empty-note { text-align: center; color: var(--faint); padding: 34px 10px; font-size: 14px; }
 
 /* ---------- 種別トグル（使う／貯める／入る） ---------- */
@@ -586,7 +586,7 @@ input, select, textarea { font: inherit; color: var(--ink); font-size: 16px; }
 .kind-toggle button.on[data-kind="income"] {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), inset 0 -2.5px 0 #00A896;
 }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */
   .kind-toggle button.on[data-kind="saving"] {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08), inset 0 -2.5px 0 #6E97B8;
   }
@@ -601,7 +601,7 @@ input, select, textarea { font: inherit; color: var(--ink); font-size: 16px; }
 .flow-item .val { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; }
 .flow-item .val.income { color: var(--money-in); }
 .flow-item .val.neg { color: var(--danger); }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */
   .flow-item .val.income { color: var(--money-in); }
 }
 .flow-rate { margin-top: 12px; font-size: 13px; color: var(--muted); }
@@ -609,9 +609,9 @@ input, select, textarea { font: inherit; color: var(--ink); font-size: 16px; }
 .group-head { font-size: 12px; font-weight: 700; color: var(--faint); margin: 14px 0 8px; }
 .group-head:first-of-type { margin-top: 0; }
 .tx .amt3.income { color: var(--money-in); }
-@media (prefers-color-scheme: dark) { .tx .amt3.income { color: var(--money-in); } }
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */ .tx .amt3.income { color: var(--money-in); } }
 .badge.saving { background: rgba(9, 23, 35, 0.08); color: #091723; }
-@media (prefers-color-scheme: dark) { .badge.saving { background: rgba(255, 255, 255, 0.12); color: #F2F5F8; } }
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */ .badge.saving { background: rgba(255, 255, 255, 0.12); color: #F2F5F8; } }
 .cat-kind-select {
   margin-top: 4px;
   background: var(--surface-2);
@@ -633,7 +633,7 @@ input, select, textarea { font: inherit; color: var(--ink); font-size: 16px; }
   border-radius: var(--radius);
   padding: 14px 16px;
 }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */
   .card, .set-card, .tx-list {
     border-top-color: rgba(255, 255, 255, 0.13);
   }
@@ -787,7 +787,7 @@ input[type="color"] { width: 42px; height: 42px; padding: 3px; border: 1px solid
   overflow: hidden;
   text-overflow: ellipsis;
 }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */
   #toast {
     background: rgba(242, 245, 243, 0.94);
     color: #111813;
@@ -866,7 +866,7 @@ th, td, label, .badge, .tab-btn { word-break: keep-all; overflow-wrap: anywhere;
 .amount-display .amt { font-weight: 700; letter-spacing: -0.02em; line-height: 1.0; }
 .gate h1, .card h3, .month-nav .m { font-family: "Outfit", "Hiragino Sans", "Noto Sans JP", sans-serif; }
 .flow-item .val.income, .tx .amt3.income { color: var(--money-in); }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */
   .flow-item .val.income, .tx .amt3.income { color: var(--money-in); }
 }
 
@@ -881,7 +881,7 @@ th, td, label, .badge, .tab-btn { word-break: keep-all; overflow-wrap: anywhere;
 :root[data-theme="terracotta"] { --accent: #D96B43; --accent-strong: #BC5327; --accent-soft: rgba(217, 107, 67, 0.10); }
 :root[data-theme="purple"] { --accent: #7C5CFF; --accent-strong: #6347E0; --accent-soft: rgba(124, 92, 255, 0.10); }
 :root[data-theme="pink"] { --accent: #EC4899; --accent-strong: #DB2777; --accent-soft: rgba(236, 72, 153, 0.10); }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (width: 0px) { /* ダークモード無効化: 白ベース固定（2026-11-20） */
   :root[data-theme="green"] { --accent: #2DD4A0; --accent-strong: #10B981; --accent-soft: rgba(45, 212, 160, 0.14); }
   :root[data-theme="coral"] { --accent: #FF6B57; --accent-strong: #FF8A75; --accent-soft: rgba(255, 107, 87, 0.16); }
   :root[data-theme="blue"] { --accent: #60A5FA; --accent-strong: #93C5FD; --accent-soft: rgba(96, 165, 250, 0.16); }
